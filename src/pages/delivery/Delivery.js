@@ -6,7 +6,8 @@ import { ReactComponent as RemoveSvg } from "../../icon/remove.svg";
 
 const Delivery = () => {
   const [all, setAll] = useState([]);
-  const [filter, setFilter] = useState("");
+  const [name, setName] = useState("");
+  const [product, setProduct] = useState("");
 
   useEffect(() => {
     const users = async () => {
@@ -37,17 +38,62 @@ const Delivery = () => {
       <div className="flex flex-no-wrap">
         <div className="container mx-auto py-10 h-64 px-6">
           <div className="w-full flex justify-end">
-            <label className="mr-4 mt-2">Name:</label>
-            <input
-              type="text"
-              name="filter"
-              id="filter"
-              className="block w-36 rounded-md border-gray-300 px-4 py-2 focus:border-indigo-500 focus:ring-indigo-500 mr-4 h-10"
-              placeholder="Name search"
-              onChange={(e) => {
-                setFilter(e.target.value);
-              }}
-            />
+            <div className="flex items-center mx-6">
+              <div className="relative w-full mx-4">
+                <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                  <svg
+                    aria-hidden="true"
+                    className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      full-rule="evenodd"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  id="simple-search"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Search Name"
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
+                  required
+                />
+              </div>
+              <div className="relative w-full mx-4">
+                <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                  <svg
+                    aria-hidden="true"
+                    className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      full-rule="evenodd"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  id="simple-search"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Search Product"
+                  onChange={(e) => {
+                    setProduct(e.target.value);
+                  }}
+                  required
+                />
+              </div>
+            </div>
             <button className="btn btn-primary" onClick={addDilevery}>
               Add
             </button>
@@ -66,10 +112,12 @@ const Delivery = () => {
             <tbody>
               {all
                 .filter((item) => {
-                  if (!filter) {
+                  if (!name && !product) {
                     return true;
                   }
-                  return item.name.includes(filter);
+                  return (
+                    item.products.includes(product) && item.name.includes(name)
+                  );
                 })
                 .map((element, index) => (
                   <tr key={index} className="text-center">
