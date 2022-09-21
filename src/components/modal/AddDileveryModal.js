@@ -4,6 +4,10 @@ import { adminUrl } from "../../constants/url";
 import { MultiSelect } from "react-multi-select-component";
 import { ProductList } from "../../constants/productList";
 import GoogleMap from "google-map-react";
+import { getDistance, convertDistance } from "geolib";
+import fromImg from "../../icon/from.png";
+import toImg from "../../icon/to.png";
+// import DraggableMap from "./DraggableMap";
 
 const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
   const [all, setAll] = useState([]);
@@ -102,20 +106,63 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
                         labelledBy="Select"
                       />
                     </div>
-                    <div>
-                      <label>Position lat</label>
-                      <input
-                        className="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
-                        value={pos[0] && pos[0].lat}
-                        readOnly
-                      />
+                    <div className="flex">
+                      <div className="mr-4">
+                        <label>From lat</label>
+                        <input
+                          className="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
+                          value={pos[0] && pos[0].lat}
+                          readOnly
+                        />
+                      </div>
+                      <div>
+                        <label>From lng</label>
+                        <input
+                          className="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
+                          value={pos[0] && pos[0].lng}
+                          readOnly
+                        />
+                      </div>
+                    </div>
+                    <div className="flex">
+                      <div className="mr-4">
+                        <label>To lat</label>
+                        <input
+                          className="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
+                          value={pos[1] && pos[1].lat}
+                          readOnly
+                        />
+                      </div>
+                      <div>
+                        <label>To lng</label>
+                        <input
+                          className="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
+                          value={pos[1] && pos[1].lng}
+                          readOnly
+                        />
+                      </div>
                     </div>
                     <div>
-                      <label>Position lng</label>
+                      <label>Distance</label>
                       <input
                         className="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
-                        value={pos[0] && pos[0].lng}
                         readOnly
+                        value={
+                          pos.length >= 2 &&
+                          convertDistance(
+                            getDistance(
+                              {
+                                latitude: pos[0].lat,
+                                longitude: pos[0].lng,
+                              },
+                              {
+                                latitude: pos[1].lat,
+                                longitude: pos[1].lng,
+                              }
+                            ),
+                            "km"
+                          ) + "km"
+                        }
                       />
                     </div>
                     <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
@@ -136,6 +183,7 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
                     </div>
                   </div>
                   <div className="w-full md:w-2/3 h-[600px] p-5">
+                    {/* <DraggableMap /> */}
                     <GoogleMap
                       defaultZoom={10}
                       resetBoundsOnResize={true}
@@ -144,12 +192,13 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
                     >
                       {pos.length > 0 &&
                         pos.map((_pos, index) => (
-                          <span
-                            key={index}
-                            className="w-2 h-2 bg-black absolute -left-1 -top-1 rounded-full"
-                            lat={_pos.lat}
-                            lng={_pos.lng}
-                          />
+                          <span key={index} lat={_pos.lat} lng={_pos.lng}>
+                            {index % 2 === 0 ? (
+                              <img src={fromImg} alt="from" className="w-5" />
+                            ) : (
+                              <img src={toImg} alt="from" className="w-5" />
+                            )}
+                          </span>
                         ))}
                     </GoogleMap>
                   </div>

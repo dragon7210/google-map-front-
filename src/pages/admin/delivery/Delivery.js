@@ -3,6 +3,9 @@ import axios from "axios";
 import { adminUrl } from "../../../constants/url";
 import AddDileveryModal from "../../../components/modal/AddDileveryModal";
 import { ReactComponent as RemoveSvg } from "../../../icon/remove.svg";
+import { convertDistance, getDistance } from "geolib";
+import progressImg from "../../../icon/progress.png";
+import finishImg from "../../../icon/finish.png";
 
 const Delivery = () => {
   const [all, setAll] = useState([]);
@@ -109,6 +112,7 @@ const Delivery = () => {
                 <th>Dilevery Products</th>
                 <th>From</th>
                 <th>To</th>
+                <th>Distance</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -123,21 +127,45 @@ const Delivery = () => {
                     item.products.includes(product) && item.name.includes(name)
                   );
                 })
-                .map((element, index) => (
+                .map((delivery, index) => (
                   <tr key={index} className="text-center">
                     <td>{index + 1}</td>
-                    <td>{element.name}</td>
-                    <td>{element.products}</td>
+                    <td>{delivery.name}</td>
+                    <td>{delivery.products}</td>
                     <td>
-                      {element.from_lat}:{element.from_lng}
+                      {delivery.from_lat.slice(0, 8)}&nbsp;:&nbsp;
+                      {delivery.from_lng.slice(0, 8)}
                     </td>
                     <td>
-                      {element.to_lat}:{element.to_lng}
+                      {delivery.to_lat.slice(0, 8)}&nbsp;:&nbsp;
+                      {delivery.to_lng.slice(0, 8)}
                     </td>
-                    <td>{element.status === 1 ? "Finish" : "Sending"}</td>
+                    <td>
+                      {convertDistance(
+                        getDistance(
+                          {
+                            latitude: delivery.from_lat,
+                            longitude: delivery.from_lng,
+                          },
+                          {
+                            latitude: delivery.to_lat,
+                            longitude: delivery.to_lng,
+                          }
+                        ),
+                        "km"
+                      )}
+                      km
+                    </td>
+                    <td>
+                      {delivery.status === 1 ? (
+                        <img src={finishImg} alt="finish" className="w-7" />
+                      ) : (
+                        <img src={progressImg} alt="progress" className="w-7" />
+                      )}
+                    </td>
                     <td>
                       <button
-                        onClick={() => onDel(element.id, index)}
+                        onClick={() => onDel(delivery.id, index)}
                         className="px-2"
                       >
                         <RemoveSvg className="w-4" />

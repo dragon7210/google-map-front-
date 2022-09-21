@@ -5,6 +5,10 @@ import { customurl } from "../../../constants/url";
 import GoogleMap from "google-map-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { convertDistance, getDistance } from "geolib";
+
+import fromImg from "../../../icon/from.png";
+import toImg from "../../../icon/to.png";
 
 const Home = () => {
   const [deliverys, setDeliverys] = useState([]);
@@ -45,6 +49,7 @@ const Home = () => {
                 <th>Products</th>
                 <th>From</th>
                 <th>To</th>
+                <th>Distance</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -54,10 +59,28 @@ const Home = () => {
                   <td className="">{index + 1}</td>
                   <td>{delivery.products}</td>
                   <td>
-                    {delivery.from_lat}:{delivery.from_lng}
+                    {delivery.from_lat.slice(0, 8)}&nbsp;:&nbsp;
+                    {delivery.from_lng.slice(0, 8)}
                   </td>
                   <td>
-                    {delivery.to_lat}:{delivery.to_lng}
+                    {delivery.to_lat.slice(0, 8)}&nbsp;:&nbsp;
+                    {delivery.to_lng.slice(0, 8)}
+                  </td>
+                  <td>
+                    {convertDistance(
+                      getDistance(
+                        {
+                          latitude: delivery.from_lat,
+                          longitude: delivery.from_lng,
+                        },
+                        {
+                          latitude: delivery.to_lat,
+                          longitude: delivery.to_lng,
+                        }
+                      ),
+                      "km"
+                    )}
+                    km
                   </td>
                   <td>
                     <div className="form-control">
@@ -84,7 +107,32 @@ const Home = () => {
             resetBoundsOnResize={true}
             defaultCenter={{ lat: 47.36667, lng: 8.55 }}
             onClick={clickHandler}
-          ></GoogleMap>
+          >
+            {deliverys.length > 0 &&
+              deliverys.map((delivery, index) => (
+                <span
+                  key={index}
+                  lat={delivery.from_lat}
+                  lng={delivery.from_lng}
+                  className="justify-center flex"
+                >
+                  <img src={fromImg} alt="from" className="w-5" />
+                  {index + 1}
+                </span>
+              ))}
+            {deliverys.length > 0 &&
+              deliverys.map((delivery, index) => (
+                <span
+                  key={index}
+                  lat={delivery.to_lat}
+                  lng={delivery.to_lng}
+                  className="justify-center flex"
+                >
+                  <img src={toImg} alt="to" className="w-5" />
+                  {index + 1}
+                </span>
+              ))}
+          </GoogleMap>
         </div>
       </div>
     </>
