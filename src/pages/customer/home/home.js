@@ -3,12 +3,17 @@ import axios from "axios";
 import cookie from "react-cookies";
 import { customurl } from "../../../constants/url";
 import GoogleMap from "google-map-react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Home = () => {
   const [deliverys, setDeliverys] = useState([]);
 
   useEffect(() => {
-    getDelivery();
+    const interval = setInterval(() => {
+      getDelivery();
+    }, 100);
+    return () => clearInterval(interval);
   }, []);
 
   const getDelivery = async () => {
@@ -16,8 +21,18 @@ const Home = () => {
     const all = await axios.post(customurl + "all", { userInfo });
     setDeliverys(all.data);
   };
-  const onUpdate = () => {};
-
+  const onUpdate = (id, status) => {
+    if (status === 1) {
+      status = 0;
+    } else {
+      status = 1;
+    }
+    axios.post(customurl + "update/" + id, { status }).then((res) => {
+      if (res.status === 200) {
+        toast(res.data.msg);
+      }
+    });
+  };
   const clickHandler = () => {};
   return (
     <>
@@ -34,14 +49,24 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-              {deliverys.map((delivery, index) => (
+              {deliverys?.map((delivery, index) => (
                 <tr key={index} className="text-center">
                   <td className="">{index + 1}</td>
                   <td>{delivery.products}</td>
                   <td>{delivery.position_lat}</td>
                   <td>{delivery.position_lng}</td>
                   <td>
-                    <button onClick={() => onUpdate()}>finish</button>
+                    <div className="form-control">
+                      <label className="label cursor-pointer justify-center">
+                        <input
+                          type="checkbox"
+                          checked={delivery.status === 1 ? true : false}
+                          className="toggle toggle-accent"
+                          onClick={() => onUpdate(delivery.id, delivery.status)}
+                        />
+                      </label>
+                      <ToastContainer />
+                    </div>
                   </td>
                 </tr>
               ))}

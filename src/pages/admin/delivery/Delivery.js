@@ -8,16 +8,19 @@ const Delivery = () => {
   const [all, setAll] = useState([]);
   const [name, setName] = useState("");
   const [product, setProduct] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const users = async () => {
-      const allDilvery = await axios.get(adminUrl + "delivery/all");
-      setAll(allDilvery.data);
-    };
-    users();
+    const interval = setInterval(() => {
+      users();
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
-  const [showModal, setShowModal] = useState(false);
+  const users = async () => {
+    const allDilvery = await axios.get(adminUrl + "delivery/all");
+    setAll(allDilvery.data);
+  };
   const addDilevery = () => {
     setShowModal(true);
   };
@@ -127,7 +130,7 @@ const Delivery = () => {
                     <td>{element.products}</td>
                     <td>{element.position_lat}</td>
                     <td>{element.position_lng}</td>
-                    <td>status</td>
+                    <td>{element.status === 1 ? "Finish" : "Sending"}</td>
                     <td>
                       <button
                         onClick={() => onDel(element.id, index)}
