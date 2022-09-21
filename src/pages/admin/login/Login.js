@@ -1,13 +1,12 @@
 import Header from "../../../components/Header";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { loginFields } from "../../../constants/formField";
 import Input from "../../../components/Input";
 import FormExtra from "../../../components/FormExtra";
-import { useDispatch } from "react-redux";
-import { setUser } from "../../../store/slices/userInfo";
 import { adminUrl } from "../../../constants/url";
+import cookie from "react-cookies";
 
 const fields = loginFields;
 let fieldsState = {};
@@ -17,7 +16,9 @@ export default function LoginPage() {
   const [loginState, setLoginState] = useState(fieldsState);
   const navigate = useNavigate();
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    cookie.save("userInfo", loginState.email);
+  }, [loginState]);
 
   const handleChange = (e) => {
     setLoginState({ ...loginState, [e.target.id]: e.target.value });
@@ -28,7 +29,6 @@ export default function LoginPage() {
       await axios.post(adminUrl + "login", {
         ...loginState,
       });
-      dispatch(setUser(loginState.email));
       navigate("/admin/dashboard");
     } catch (error) {
       if (error.response) {

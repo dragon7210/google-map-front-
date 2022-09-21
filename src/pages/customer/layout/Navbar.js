@@ -2,20 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import cookie from "react-cookies";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const userInfoEmail = useSelector((store) => store?.userInfo);
-  const users = useSelector((store) => store?.users);
   const [userInfo, setUserInfo] = useState("");
 
   useEffect(() => {
-    users.forEach((user) => {
-      if (user.email === userInfoEmail) {
-        setUserInfo(user);
-      }
-    });
+    const temp = cookie.load("userInfo");
+    setUserInfo(temp);
   }, []);
 
   const Logout = async (e) => {
@@ -58,7 +53,7 @@ const Navbar = () => {
             <li>
               <a href="/" className="justify-between">
                 Profile
-                <span className="badge">New</span>
+                <span className="badge">{userInfo}</span>
               </a>
             </li>
             <li>

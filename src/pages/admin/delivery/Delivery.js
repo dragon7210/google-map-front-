@@ -107,8 +107,8 @@ const Delivery = () => {
                 <th>No</th>
                 <th>Name</th>
                 <th>Dilevery Products</th>
-                <th>Position lat</th>
-                <th>Position lng</th>
+                <th>From</th>
+                <th>To</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -128,8 +128,12 @@ const Delivery = () => {
                     <td>{index + 1}</td>
                     <td>{element.name}</td>
                     <td>{element.products}</td>
-                    <td>{element.position_lat}</td>
-                    <td>{element.position_lng}</td>
+                    <td>
+                      {element.from_lat}:{element.from_lng}
+                    </td>
+                    <td>
+                      {element.to_lat}:{element.to_lng}
+                    </td>
                     <td>{element.status === 1 ? "Finish" : "Sending"}</td>
                     <td>
                       <button

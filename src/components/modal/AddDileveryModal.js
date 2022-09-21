@@ -24,7 +24,14 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
       ...deliveryInfo,
       selProduct: selected,
     });
-  }, []);
+  }, [selected]);
+
+  useEffect(() => {
+    setDilveryInfo({
+      ...deliveryInfo,
+      sel: all[0]?.name ?? "",
+    });
+  }, [all]);
 
   const users = async () => {
     const all = await axios.get(adminUrl);
@@ -37,13 +44,14 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
       sel: e.target.value,
     });
   };
+
   const handleSubmit = async () => {
     await axios
       .post(adminUrl + "delivery/add", { deliveryInfo, pos })
       .then((res) => {
+        console.log(res.data.msg);
         if (res.status === 200) {
           setShowModal(false);
-          window.location.reload("/admin/delivery");
         }
       });
   };
@@ -74,11 +82,12 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
                       <label>Select the dilevery</label>
                       <select
                         id="name"
-                        onChange={selPeople}
+                        onChange={(e) => selPeople(e)}
+                        value={deliveryInfo.sel}
                         className="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                       >
                         {all.map((user, index) => (
-                          <option key={index} value={user.name}>
+                          <option key={`user-${index}`} value={user.name}>
                             {user.name}
                           </option>
                         ))}
@@ -117,9 +126,6 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
                       >
                         Close
                       </button>
-                      {/* {pos.length &&
-                        deliveryInfo?.sel &&
-                        deliveryInfo.selProduct.length} */}
                       <button
                         className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"

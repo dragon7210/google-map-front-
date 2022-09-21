@@ -37,14 +37,14 @@ const Home = () => {
   return (
     <>
       <div className="overflow-x-auto p-10">
-        <div className=" h-[250px]">
+        <div className=" ">
           <table className="table table-zebra w-full text-center">
             <thead className="text-xs uppercase text-gray-400 ">
               <tr>
                 <th>No</th>
                 <th>Products</th>
-                <th>Position lat</th>
-                <th>Position lng</th>
+                <th>From</th>
+                <th>To</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -53,8 +53,12 @@ const Home = () => {
                 <tr key={index} className="text-center">
                   <td className="">{index + 1}</td>
                   <td>{delivery.products}</td>
-                  <td>{delivery.position_lat}</td>
-                  <td>{delivery.position_lng}</td>
+                  <td>
+                    {delivery.from_lat}:{delivery.from_lng}
+                  </td>
+                  <td>
+                    {delivery.to_lat}:{delivery.to_lng}
+                  </td>
                   <td>
                     <div className="form-control">
                       <label className="label cursor-pointer justify-center">
