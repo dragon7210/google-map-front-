@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { url } from "../../constants/url";
+import { adminUrl } from "../../constants/url";
 import { putUser } from "../../store/slices/users";
 import Input from "../Input";
 
@@ -30,7 +30,7 @@ const EditUserModal = ({ showModalOpen, setShowModal, id, index }) => {
 
   const handleSubmit = async () => {
     await axios
-      .put(url + id, { name: user.name, email: user.email })
+      .put(adminUrl + id, { name: user.name, email: user.email })
       .then((res) => {
         if (res.status === 200) {
           dispatch(putUser(user));

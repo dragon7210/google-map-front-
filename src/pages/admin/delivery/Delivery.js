@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { url } from "../../constants/url";
-import AddDileveryModal from "../../components/modal/AddDileveryModal";
-import { ReactComponent as RemoveSvg } from "../../icon/remove.svg";
+import { adminUrl } from "../../../constants/url";
+import AddDileveryModal from "../../../components/modal/AddDileveryModal";
+import { ReactComponent as RemoveSvg } from "../../../icon/remove.svg";
 
 const Delivery = () => {
   const [all, setAll] = useState([]);
@@ -11,7 +11,7 @@ const Delivery = () => {
 
   useEffect(() => {
     const users = async () => {
-      const allDilvery = await axios.get(url + "delivery/all");
+      const allDilvery = await axios.get(adminUrl + "delivery/all");
       setAll(allDilvery.data);
     };
     users();
@@ -23,7 +23,7 @@ const Delivery = () => {
   };
 
   const onDel = async (id, index) => {
-    await axios.delete(url + "delivery/" + id).then((res) => {
+    await axios.delete(adminUrl + "delivery/" + id).then((res) => {
       if (res.status === 200) {
         setAll((prev) => {
           const temp = prev.map((i) => i);
@@ -106,6 +106,7 @@ const Delivery = () => {
                 <th>Dilevery Products</th>
                 <th>Position lat</th>
                 <th>Position lng</th>
+                <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -126,6 +127,7 @@ const Delivery = () => {
                     <td>{element.products}</td>
                     <td>{element.position_lat}</td>
                     <td>{element.position_lng}</td>
+                    <td>status</td>
                     <td>
                       <button
                         onClick={() => onDel(element.id, index)}

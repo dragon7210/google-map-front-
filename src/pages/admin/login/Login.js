@@ -1,12 +1,13 @@
-import Header from "../../components/Header";
+import Header from "../../../components/Header";
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { loginFields } from "../../constants/formField";
-import Input from "../../components/Input";
-import FormExtra from "../../components/FormExtra";
+import { loginFields } from "../../../constants/formField";
+import Input from "../../../components/Input";
+import FormExtra from "../../../components/FormExtra";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../store/slices/userInfo";
+import { setUser } from "../../../store/slices/userInfo";
+import { adminUrl } from "../../../constants/url";
 
 const fields = loginFields;
 let fieldsState = {};
@@ -22,13 +23,13 @@ export default function LoginPage() {
     setLoginState({ ...loginState, [e.target.id]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (req, res) => {
     try {
-      await axios.post("http://localhost:5000/login", {
+      await axios.post(adminUrl + "login", {
         ...loginState,
       });
       dispatch(setUser(loginState.email));
-      navigate("/dashboard");
+      navigate("/admin/dashboard");
     } catch (error) {
       if (error.response) {
       }
@@ -37,12 +38,7 @@ export default function LoginPage() {
   return (
     <>
       <div className="w-96 mt-48 mx-auto">
-        <Header
-          heading="Login to your account"
-          paragraph="Don't have an account yet? "
-          linkName="Signup"
-          linkUrl="/signup"
-        />
+        <Header heading="Login to your account" />
         <form className="mt-8 space-y-6">
           <div className="-space-y-px">
             {fields.map((field) => (

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { url } from "../../constants/url";
+import { adminUrl } from "../../constants/url";
 import { MultiSelect } from "react-multi-select-component";
 import { ProductList } from "../../constants/productList";
 import GoogleMap from "google-map-react";
@@ -24,10 +24,10 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
       ...deliveryInfo,
       selProduct: selected,
     });
-  }, [selected]);
+  }, []);
 
   const users = async () => {
-    const all = await axios.get(url);
+    const all = await axios.get(adminUrl);
     setAll(all.data);
   };
 
@@ -39,11 +39,11 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
   };
   const handleSubmit = async () => {
     await axios
-      .post(url + "delivery/add", { deliveryInfo, pos })
+      .post(adminUrl + "delivery/add", { deliveryInfo, pos })
       .then((res) => {
         if (res.status === 200) {
           setShowModal(false);
-          window.location.reload("/dilevery");
+          window.location.reload("/admin/delivery");
         }
       });
   };

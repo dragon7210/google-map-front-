@@ -1,9 +1,9 @@
-import Header from "../../components/Header";
+import Header from "../../../components/Header";
 import axios from "axios";
-import { signupFields } from "../../constants/formField";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Input from "../../components/Input";
+import { signupFields } from "../../../constants/formField";
+import Input from "../../../components/Input";
 
 const fields = signupFields;
 let fieldsState = {};

@@ -22,8 +22,8 @@ const Navbar = () => {
     e.preventDefault();
 
     try {
-      await axios.delete("http://localhost:5000/logout");
-      navigate("/");
+      await axios.delete("http://localhost:5000/admin/logout");
+      navigate("/admin");
     } catch (error) {
       console.log(error);
     }
@@ -32,20 +32,23 @@ const Navbar = () => {
   return (
     <div className="navbar bg-base-200">
       <div className="flex-1">
-        <Link to="/dashboard" className="btn btn-ghost normal-case text-xl">
+        <Link
+          to="/admin/dashboard"
+          className="btn btn-ghost normal-case text-xl"
+        >
           Delivery Management System
         </Link>
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal p-0 mr-4">
           <Link
-            to="/dashboard"
+            to="/admin/dashboard"
             className="flex items-center p-2 space-x-3 rounded-md hover:text-white"
           >
             Dashboard
           </Link>
           <Link
-            to="/delivery"
+            to="/admin/delivery"
             className="flex items-center p-2 space-x-3 rounded-md hover:text-white"
           >
             Delivery

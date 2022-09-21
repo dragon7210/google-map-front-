@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import { ReactComponent as EditSvg } from "../../icon/edit.svg";
-import { ReactComponent as RemoveSvg } from "../../icon/remove.svg";
-import { url } from "../../constants/url";
-import EditUserModal from "../../components/modal/EditUserModal";
+import { ReactComponent as EditSvg } from "../../../icon/edit.svg";
+import { ReactComponent as RemoveSvg } from "../../../icon/remove.svg";
+import { adminUrl } from "../../../constants/url";
+import EditUserModal from "../../../components/modal/EditUserModal";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteUser, setUsers } from "../../store/slices/users";
+import { deleteUser, setUsers } from "../../../store/slices/users";
 
 const Dashboard = () => {
   const [id, setId] = useState("");
@@ -27,7 +27,7 @@ const Dashboard = () => {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get(url + "token");
+      const response = await axios.get(adminUrl + "token");
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
       setExpire(decoded.exp);
@@ -37,14 +37,13 @@ const Dashboard = () => {
       }
     }
   };
-
   const axiosJWT = axios.create();
 
   axiosJWT.interceptors.request.use(
     async (config) => {
       const currentDate = new Date();
       if (expire * 1000 < currentDate.getTime()) {
-        const response = await axios.get(url + "token");
+        const response = await axios.get(adminUrl + "token");
         config.headers.Authorization = `Bearer ${response.data.accessToken}`;
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
@@ -58,20 +57,22 @@ const Dashboard = () => {
   );
 
   const getUsers = async () => {
-    const response = await axiosJWT.get(url + "users", {
+    const response = await axiosJWT.get(adminUrl + "users", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     dispatch(setUsers(response.data));
   };
+
   const onEdit = (id, index) => {
     setShowModal(true);
     setId(id);
     setIndex(index);
   };
+
   const onDel = async (id) => {
-    await axios.delete(url + id).then((res) => {
+    await axios.delete(adminUrl + id).then((res) => {
       if (res.status === 200) {
         dispatch(deleteUser(id));
       }
