@@ -15,6 +15,7 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
   const [selected, setSelected] = useState([]);
   const [frompos, setFromPos] = useState({});
   const [topos, setToPos] = useState({});
+  const [draggable, setDraggable] = useState(true);
 
   const clickHandler = (e) => {
     if (Object.keys(topos).length === 0 && Object.keys(frompos).length === 0) {
@@ -22,6 +23,15 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
     }
     if (Object.keys(frompos).length !== 0 && Object.keys(topos).length === 0) {
       setToPos({ lat: e.lat, lng: e.lng });
+    }
+  };
+
+  const onMarkerInteraction = (key, props, mouse) => {
+    setDraggable(false);
+    if (key === "0") {
+      setFromPos({ ...mouse });
+    } else {
+      setToPos({ ...mouse });
     }
   };
 
@@ -192,21 +202,24 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
                   </div>
                   <div className="w-full md:w-2/3 h-[600px] p-5">
                     <GoogleMapReact
+                      draggable={draggable}
                       bootstrapURLKeys={{ key: "" }}
                       defaultZoom={10}
                       defaultCenter={{ lat: 19.076, lng: 72.8777 }}
                       yesIWantToUseGoogleMapApiInternals
                       onClick={clickHandler}
+                      onChildMouseDown={onMarkerInteraction}
+                      onChildMouseMove={onMarkerInteraction}
+                      onChildMouseUp={() => setDraggable(true)}
                     >
                       {Object.keys(frompos).length !== 0 && (
-                        <span lat={frompos.lat} lng={frompos.lng}>
+                        <span lat={frompos.lat} lng={frompos.lng} key={0}>
                           <img src={fromImg} alt="from" className="w-5" />
                         </span>
                       )}
                       {Object.keys(topos).length !== 0 && (
-                        <span lat={topos.lat} lng={topos.lng}>
-                          n
-                          <img src={toImg} alt="from" className="w-5" />
+                        <span lat={topos.lat} lng={topos.lng} key={1}>
+                          <img src={toImg} alt="to" className="w-5" />
                         </span>
                       )}
                     </GoogleMapReact>

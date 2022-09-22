@@ -40,7 +40,6 @@ const Home = () => {
       }
     });
   };
-  const clickHandler = () => {};
   return (
     <>
       <div className="overflow-x-auto p-10">
@@ -94,7 +93,9 @@ const Home = () => {
                           type="checkbox"
                           checked={delivery.status === 1 ? true : false}
                           className="toggle toggle-accent"
-                          onClick={() => onUpdate(delivery.id, delivery.status)}
+                          onChange={() =>
+                            onUpdate(delivery.id, delivery.status)
+                          }
                         />
                       </label>
                       <ToastContainer />
@@ -108,10 +109,10 @@ const Home = () => {
 
         <div className="w-full h-[500px] mt-5">
           <GoogleMap
+            bootstrapURLKeys={{ key: "" }}
             defaultZoom={10}
-            resetBoundsOnResize={true}
             defaultCenter={{ lat: 19.076, lng: 72.8777 }}
-            onClick={clickHandler}
+            yesIWantToUseGoogleMapApiInternals
           >
             {deliverys.length > 0 &&
               deliverys.map((delivery, index) => (
