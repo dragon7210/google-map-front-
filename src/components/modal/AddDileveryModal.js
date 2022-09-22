@@ -3,20 +3,26 @@ import { useEffect, useState } from "react";
 import { adminUrl } from "../../constants/url";
 import { MultiSelect } from "react-multi-select-component";
 import { ProductList } from "../../constants/productList";
-import GoogleMap from "google-map-react";
+import GoogleMapReact from "google-map-react";
 import { getDistance, convertDistance } from "geolib";
+
 import fromImg from "../../icon/from.png";
 import toImg from "../../icon/to.png";
-// import DraggableMap from "./DraggableMap";
 
 const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
   const [all, setAll] = useState([]);
   const [deliveryInfo, setDilveryInfo] = useState({});
   const [selected, setSelected] = useState([]);
-  const [pos, setPos] = useState([]);
+  const [frompos, setFromPos] = useState({});
+  const [topos, setToPos] = useState({});
 
   const clickHandler = (e) => {
-    setPos([...pos, { lat: e.lat, lng: e.lng }]);
+    if (Object.keys(topos).length === 0 && Object.keys(frompos).length === 0) {
+      setFromPos({ lat: e.lat, lng: e.lng });
+    }
+    if (Object.keys(frompos).length !== 0 && Object.keys(topos).length === 0) {
+      setToPos({ lat: e.lat, lng: e.lng });
+    }
   };
 
   useEffect(() => {
@@ -51,9 +57,8 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
 
   const handleSubmit = async () => {
     await axios
-      .post(adminUrl + "delivery/add", { deliveryInfo, pos })
+      .post(adminUrl + "delivery/add", { deliveryInfo, frompos, topos })
       .then((res) => {
-        console.log(res.data.msg);
         if (res.status === 200) {
           setShowModal(false);
         }
@@ -111,7 +116,7 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
                         <label>From lat</label>
                         <input
                           className="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
-                          value={pos[0] && pos[0].lat}
+                          value={frompos && frompos.lat}
                           readOnly
                         />
                       </div>
@@ -119,7 +124,7 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
                         <label>From lng</label>
                         <input
                           className="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
-                          value={pos[0] && pos[0].lng}
+                          value={frompos && frompos.lng}
                           readOnly
                         />
                       </div>
@@ -129,7 +134,7 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
                         <label>To lat</label>
                         <input
                           className="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
-                          value={pos[1] && pos[1].lat}
+                          value={topos && topos.lat}
                           readOnly
                         />
                       </div>
@@ -137,7 +142,7 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
                         <label>To lng</label>
                         <input
                           className="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
-                          value={pos[1] && pos[1].lng}
+                          value={topos && topos.lng}
                           readOnly
                         />
                       </div>
@@ -148,20 +153,23 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
                         className="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                         readOnly
                         value={
-                          pos.length >= 2 &&
+                          Object.keys(topos).length !== 0 &&
+                          Object.keys(frompos).length !== 0 &&
                           convertDistance(
                             getDistance(
                               {
-                                latitude: pos[0].lat,
-                                longitude: pos[0].lng,
+                                latitude: frompos.lat,
+                                longitude: frompos.lng,
                               },
                               {
-                                latitude: pos[1].lat,
-                                longitude: pos[1].lng,
+                                latitude: topos.lat,
+                                longitude: topos.lng,
                               }
                             ),
                             "km"
-                          ) + "km"
+                          )
+                            .toString()
+                            .slice(0, 6)
                         }
                       />
                     </div>
@@ -183,24 +191,25 @@ const AddDileveryModal = ({ showModalOpen, setShowModal }) => {
                     </div>
                   </div>
                   <div className="w-full md:w-2/3 h-[600px] p-5">
-                    {/* <DraggableMap /> */}
-                    <GoogleMap
+                    <GoogleMapReact
+                      bootstrapURLKeys={{ key: "" }}
                       defaultZoom={10}
-                      resetBoundsOnResize={true}
-                      defaultCenter={{ lat: 47.36667, lng: 8.55 }}
+                      defaultCenter={{ lat: 19.076, lng: 72.8777 }}
+                      yesIWantToUseGoogleMapApiInternals
                       onClick={clickHandler}
                     >
-                      {pos.length > 0 &&
-                        pos.map((_pos, index) => (
-                          <span key={index} lat={_pos.lat} lng={_pos.lng}>
-                            {index % 2 === 0 ? (
-                              <img src={fromImg} alt="from" className="w-5" />
-                            ) : (
-                              <img src={toImg} alt="from" className="w-5" />
-                            )}
-                          </span>
-                        ))}
-                    </GoogleMap>
+                      {Object.keys(frompos).length !== 0 && (
+                        <span lat={frompos.lat} lng={frompos.lng}>
+                          <img src={fromImg} alt="from" className="w-5" />
+                        </span>
+                      )}
+                      {Object.keys(topos).length !== 0 && (
+                        <span lat={topos.lat} lng={topos.lng}>
+                          n
+                          <img src={toImg} alt="from" className="w-5" />
+                        </span>
+                      )}
+                    </GoogleMapReact>
                   </div>
                 </div>
               </div>

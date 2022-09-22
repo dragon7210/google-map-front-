@@ -25,6 +25,9 @@ const Home = () => {
     const all = await axios.post(customurl + "all", { userInfo });
     setDeliverys(all.data);
   };
+
+  // DistanceMatrixService();
+
   const onUpdate = (id, status) => {
     if (status === 1) {
       status = 0;
@@ -79,7 +82,9 @@ const Home = () => {
                         }
                       ),
                       "km"
-                    )}
+                    )
+                      .toString()
+                      .slice(0, 6)}
                     km
                   </td>
                   <td>
@@ -105,7 +110,7 @@ const Home = () => {
           <GoogleMap
             defaultZoom={10}
             resetBoundsOnResize={true}
-            defaultCenter={{ lat: 47.36667, lng: 8.55 }}
+            defaultCenter={{ lat: 19.076, lng: 72.8777 }}
             onClick={clickHandler}
           >
             {deliverys.length > 0 &&

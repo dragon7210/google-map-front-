@@ -153,14 +153,24 @@ const Delivery = () => {
                           }
                         ),
                         "km"
-                      )}
+                      )
+                        .toString()
+                        .slice(0, 6)}
                       km
                     </td>
                     <td>
                       {delivery.status === 1 ? (
-                        <img src={finishImg} alt="finish" className="w-7" />
+                        <img
+                          src={finishImg}
+                          alt="finish"
+                          className="w-7 m-auto"
+                        />
                       ) : (
-                        <img src={progressImg} alt="progress" className="w-7" />
+                        <img
+                          src={progressImg}
+                          alt="progress"
+                          className="w-7 m-auto"
+                        />
                       )}
                     </td>
                     <td>
