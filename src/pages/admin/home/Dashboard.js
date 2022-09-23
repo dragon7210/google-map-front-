@@ -83,7 +83,7 @@ const Dashboard = () => {
     <div className="w-full h-full">
       <div className="flex flex-no-wrap">
         <div className="container mx-auto py-10 h-64 px-6">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto relative">
             <table className="table table-zebra w-full text-center">
               <thead className="text-xs uppercase text-gray-400 ">
                 <tr>

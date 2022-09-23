@@ -16,7 +16,7 @@ const Home = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       getDelivery();
-    }, 100);
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -25,8 +25,6 @@ const Home = () => {
     const all = await axios.post(customurl + "all", { userInfo });
     setDeliverys(all.data);
   };
-
-  // DistanceMatrixService();
 
   const onUpdate = (id, status) => {
     if (status === 1) {
@@ -42,8 +40,8 @@ const Home = () => {
   };
   return (
     <>
-      <div className="overflow-x-auto p-10">
-        <div className=" ">
+      <div className="p-10 ">
+        <div className="overflow-x-auto relative">
           <table className="table table-zebra w-full text-center">
             <thead className="text-xs uppercase text-gray-400 ">
               <tr>
@@ -106,7 +104,6 @@ const Home = () => {
             </tbody>
           </table>
         </div>
-
         <div className="w-full h-[500px] mt-5">
           <GoogleMap
             bootstrapURLKeys={{ key: "" }}

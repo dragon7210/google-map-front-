@@ -42,7 +42,7 @@ const Delivery = () => {
   return (
     <div className="w-full h-full">
       <div className="flex flex-no-wrap">
-        <div className="container mx-auto py-10 h-64 px-6">
+        <div className="container mx-auto py-10 px-6 relative overflow-x-auto">
           <div className="w-full flex justify-end">
             <div className="flex items-center mx-6">
               <div className="relative w-full mx-4">

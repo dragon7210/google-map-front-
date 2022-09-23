@@ -37,14 +37,14 @@ export default function LoginPage() {
 
   return (
     <>
-      <div className="w-96 mt-48 mx-auto">
+      <div className="w-30 mt-10 mx-auto">
         <Header
           heading="Login to your account"
           paragraph="Don't have an account yet? "
           linkName="Signup"
           linkUrl="/signup"
         />
-        <form className="mt-8 space-y-6">
+        <form className="mt-8 space-y-6 mx-6">
           <div className="-space-y-px">
             {fields.map((field) => (
               <Input
